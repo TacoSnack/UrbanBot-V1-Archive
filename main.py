@@ -142,7 +142,7 @@ async def buildings(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='policies', description='View available policies for your city,')
+@tree.command(name='policies', description='View available policies for your city.')
 async def policies(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -254,7 +254,7 @@ async def collect(intr: discord.Interaction):
         secondary_res = cur.execute('SELECT res_level, com_level, ind_level, road_level, bus_level, park_level, plazas, bus_stations FROM cities WHERE id=?', (intr.user.id, )).fetchone()
         
         new_population = math.floor(primary_res[1] + secondary_res[0] * 1000)
-        new_balance = math.floor(primary_res[2] + secondary_res[1] * 100)
+        new_balance = math.floor(primary_res[2] + secondary_res[1] * 150)
         new_resources = math.floor(primary_res[3] + secondary_res[2] * 150)
         new_crowdedness = math.floor((primary_res[0] * 95 - (secondary_res[5] * 20 + secondary_res[6] * 15)) / 100)
         new_traffic = math.floor((primary_res[1] * 90 - (secondary_res[3] * 6 + secondary_res[4] * 12 + secondary_res[7] * 6)) / 10000)
@@ -314,6 +314,24 @@ async def stats(intr: discord.Interaction):
     city_count = cur.execute('SELECT COUNT (*) FROM cities').fetchone()
 
     await intr.response.send_message(f'UrbanBot is on {len(client.guilds)} servers and {city_count[0]} cities have been created!')
+
+@tree.command(name='modname', description='Moderator use only.')
+async def modname(intr: discord.Interaction, user: discord.Member):
+    if intr.user.id == 768584481795342356:
+        cur.execute('UPDATE cities SET name=? WHERE id=?', ('Moderated Name', user.id, ))
+        await intr.response.send_message('Moderated user\'s city name.')
+        con.commit()
+    else:
+        await intr.response.send_message('You must be a moderator to use this command.')
+
+@tree.command(name='setname', description='Moderator use only.')
+async def setname(intr: discord.Interaction, user: discord.Member, new_city_name: str):
+    if intr.user.id == 768584481795342356:
+        cur.execute('UPDATE cities SET name=? WHERE id=?', (new_city_name, user.id, ))
+        await intr.response.send_message('User\'s city name has been updated.')
+        con.commit()
+    else:
+        await intr.response.send_message('You must be a moderator to use this command.')
 
 @tree.error
 async def on_app_command_error(intr: discord.Interaction, error: app_commands.AppCommandError):
