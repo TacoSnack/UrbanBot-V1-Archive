@@ -291,23 +291,21 @@ async def give(intr: discord.Interaction, user: discord.Member, money_amount: in
 
 @tree.command(name='lb', description='See the top 10 cities!')
 async def lb(intr: discord.Interaction):
-    """res = cur.execute('SELECT name, happiness FROM cities ORDER BY happiness DESC').fetchmany(10)
+    res = cur.execute('SELECT name, happiness FROM cities ORDER BY happiness DESC').fetchmany(10)
 
     lb_embed = discord.Embed(title='Leaderboard', description='The leaderboard is ranked by happiness.', color=0x73a0d0)
-    lb_embed.add_field(name=res[0][0], value=f'Happiness: {res[0][1]}', inline=False)
-    lb_embed.add_field(name=res[1][0], value=f'Happiness: {res[1][1]}', inline=False)
-    lb_embed.add_field(name=res[2][0], value=f'Happiness: {res[2][1]}', inline=False)
-    lb_embed.add_field(name=res[3][0], value=f'Happiness: {res[3][1]}', inline=False)
-    lb_embed.add_field(name=res[4][0], value=f'Happiness: {res[4][1]}', inline=False)
-    lb_embed.add_field(name=res[5][0], value=f'Happiness: {res[5][1]}', inline=False)
-    lb_embed.add_field(name=res[6][0], value=f'Happiness: {res[6][1]}', inline=False)
-    lb_embed.add_field(name=res[7][0], value=f'Happiness: {res[7][1]}', inline=False)
-    lb_embed.add_field(name=res[8][0], value=f'Happiness: {res[8][1]}', inline=False)
-    lb_embed.add_field(name=res[9][0], value=f'Happiness: {res[9][1]}', inline=False)
+    lb_embed.add_field(name=f'1st: {res[0][0]}', value=f'Happiness: {res[0][1]}', inline=False)
+    lb_embed.add_field(name=f'2nd: {res[1][0]}', value=f'Happiness: {res[1][1]}', inline=False)
+    lb_embed.add_field(name=f'3rd: {res[2][0]}', value=f'Happiness: {res[2][1]}', inline=False)
+    lb_embed.add_field(name=f'4th: {res[3][0]}', value=f'Happiness: {res[3][1]}', inline=False)
+    lb_embed.add_field(name=f'5th: {res[4][0]}', value=f'Happiness: {res[4][1]}', inline=False)
+    lb_embed.add_field(name=f'6th: {res[5][0]}', value=f'Happiness: {res[5][1]}', inline=False)
+    lb_embed.add_field(name=f'7th: {res[6][0]}', value=f'Happiness: {res[6][1]}', inline=False)
+    lb_embed.add_field(name=f'8th: {res[7][0]}', value=f'Happiness: {res[7][1]}', inline=False)
+    lb_embed.add_field(name=f'9th: {res[8][0]}', value=f'Happiness: {res[8][1]}', inline=False)
+    lb_embed.add_field(name=f'10th: {res[9][0]}', value=f'Happiness: {res[9][1]}', inline=False)
 
-    await intr.response.send_message(embed=lb_embed)"""
-
-    await intr.response.send_message('The leaderboard will be programmed once the bot reaches 10 cities!')
+    await intr.response.send_message(embed=lb_embed)
 
 @tree.command(name='stats', description='View the bot\'s server and city count.')
 async def stats(intr: discord.Interaction):
