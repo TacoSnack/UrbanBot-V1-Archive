@@ -331,6 +331,15 @@ async def setname(intr: discord.Interaction, user: discord.Member, new_city_name
     else:
         await intr.response.send_message('You must be a moderator to use this command.')
 
+@tree.command(name='print_db', description='Developer use only.')
+async def print_db(intr: discord.Interaction):
+    if intr.user.id == 768584481795342356:
+        res = cur.execute('SELECT * FROM cities').fetchall()
+        print(res)
+        await intr.response.send_message('The database has been printed to the host console.')
+    else:
+        await intr.response.send_message('You must be a developer to use this command.')
+
 @tree.error
 async def on_app_command_error(intr: discord.Interaction, error: app_commands.AppCommandError):
     if isinstance(error, app_commands.CommandOnCooldown):
