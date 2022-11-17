@@ -314,9 +314,9 @@ async def stats(intr: discord.Interaction):
     await intr.response.send_message(f'UrbanBot is on {len(client.guilds)} servers and {city_count[0]} cities have been created!')
 
 @tree.command(name='modname', description='Moderator use only.')
-async def modname(intr: discord.Interaction, user: discord.Member):
+async def modname(intr: discord.Interaction, city_name: str):
     if intr.user.id == 768584481795342356:
-        cur.execute('UPDATE cities SET name=? WHERE id=?', ('Moderated Name', user.id, ))
+        cur.execute('UPDATE cities SET name=? WHERE name=?', ('Moderated Name', city_name, ))
         await intr.response.send_message('Moderated user\'s city name.')
         con.commit()
     else:
