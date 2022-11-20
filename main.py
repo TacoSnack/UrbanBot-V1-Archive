@@ -276,15 +276,18 @@ async def collect(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='give', description='Developer use only.', guild=discord.Object(id=1039591871258820618))
+@tree.command(name='give', description='Developer use only.')
 async def give(intr: discord.Interaction, user: discord.Member, money_amount: int, resources_amount: int):
-    res = cur.execute('SELECT balance, resources FROM cities WHERE id=?', (user.id, )).fetchone()
-    new_balance = res[0] + money_amount
-    new_resources = res[1] + resources_amount
+    if intr.user.id == 768584481795342356:
+        res = cur.execute('SELECT balance, resources FROM cities WHERE id=?', (user.id, )).fetchone()
+        new_balance = res[0] + money_amount
+        new_resources = res[1] + resources_amount
 
-    cur.execute('UPDATE cities SET balance=?, resources=? WHERE id=?', (new_balance, new_resources, user.id, ))
-    await intr.response.send_message('Money/resources given to user.')
-    con.commit()
+        cur.execute('UPDATE cities SET balance=?, resources=? WHERE id=?', (new_balance, new_resources, user.id, ))
+        await intr.response.send_message('Money/resources given to user.')
+        con.commit()
+    else:
+        await intr.response.send_message('You must be a developer to use this command!')
 
 @tree.command(name='lb', description='See the top 10 cities!')
 async def lb(intr: discord.Interaction):
@@ -310,23 +313,32 @@ async def stats(intr: discord.Interaction):
 
     await intr.response.send_message(f'UrbanBot is on {len(client.guilds)} servers and {city_count[0]} cities have been created!')
 
-@tree.command(name='modname', description='Moderator use only.', guild=discord.Object(id=1039591871258820618))
+@tree.command(name='modname', description='Moderator use only.')
 async def modname(intr: discord.Interaction, city_name: str):
-    cur.execute('UPDATE cities SET name=? WHERE name=?', ('Moderated Name', city_name, ))
-    await intr.response.send_message('Moderated user\'s city name.')
-    con.commit()
+    if intr.user.id == 768584481795342356:
+        cur.execute('UPDATE cities SET name=? WHERE name=?', ('Moderated Name', city_name, ))
+        await intr.response.send_message('Moderated user\'s city name.')
+        con.commit()
+    else:
+        await intr.response.send_message('You must be a moderator to use this command.')
 
-@tree.command(name='setname', description='Moderator use only.', guild=discord.Object(id=1039591871258820618))
+@tree.command(name='setname', description='Moderator use only.')
 async def setname(intr: discord.Interaction, user: discord.Member, new_city_name: str):
-    cur.execute('UPDATE cities SET name=? WHERE id=?', (new_city_name, user.id, ))
-    await intr.response.send_message('User\'s city name has been updated.')
-    con.commit()
+    if intr.user.id == 768584481795342356:
+        cur.execute('UPDATE cities SET name=? WHERE id=?', (new_city_name, user.id, ))
+        await intr.response.send_message('User\'s city name has been updated.')
+        con.commit()
+    else:
+        await intr.response.send_message('You must be a moderator to use this command.')
 
-@tree.command(name='print_db', description='Developer use only.', guild=discord.Object(id=1039591871258820618))
+@tree.command(name='print_db', description='Developer use only.')
 async def print_db(intr: discord.Interaction):
-    res = cur.execute('SELECT * FROM cities').fetchall()
-    print(res)
-    await intr.response.send_message('The database has been printed to the host console.')
+    if intr.user.id == 768584481795342356:
+        res = cur.execute('SELECT * FROM cities').fetchall()
+        print(res)
+        await intr.response.send_message('The database has been printed to the host console.')
+    else:
+        await intr.response.send_message('You must be a developer to use this command.')
 
 @tree.error
 async def on_app_command_error(intr: discord.Interaction, error: app_commands.AppCommandError):
