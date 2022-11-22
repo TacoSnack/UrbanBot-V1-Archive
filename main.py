@@ -10,11 +10,14 @@ tree = app_commands.CommandTree(client)
 con = sqlite3.connect('cities.db')
 cur = con.cursor()
 
+support_server = discord.Object(id=1039591871258820618)
+
 @client.event
 async def on_ready():
     cur.execute('CREATE TABLE IF NOT EXISTS cities (id INT PRIMARY KEY, name TEXT, happiness INT, population INT, balance INT, resources INT, crowdedness INT, traffic INT, pollution INT, res_level INT, com_level INT, ind_level INT, road_level INT, bus_level INT, park_level INT, plazas INT, bus_stations INT)')
 
     await tree.sync()
+    await tree.sync(support_server)
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='your cities grow! | /invite'))
 
     print(f'Logged in as {client.user}!')
@@ -32,7 +35,7 @@ async def found(intr: discord.Interaction, city_name: str):
 
         con.commit()
 
-@tree.command(name='city', description='View your city.')
+@tree.command(name='city', description='View your city')
 async def city(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -52,7 +55,7 @@ async def city(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='support', description='Get an invite to the support server.')
+@tree.command(name='support', description='Get an invite to the support server')
 async def support(intr: discord.Interaction):
     await intr.response.send_message('Join the UrbanBot support server here: https://discord.gg/XuZNNJbf4U')
 
@@ -60,7 +63,7 @@ async def support(intr: discord.Interaction):
 async def invite(intr: discord.Interaction):
     await intr.response.send_message('Invite the bot to your server here: https://discord.com/oauth2/authorize?client_id=1025198176547909693&scope=bot&permissions=274877959168 ')
 
-@tree.command(name='help', description='Learn the basic commands and info.')
+@tree.command(name='help', description='Learn the basic commands and info')
 async def help(intr: discord.Interaction):
     help_embed = discord.Embed(title='Help and info', description='Join the [support server](https://discord.gg/gFGAyN5DPn) for extra help.', color=0x73a0d0)
     help_embed.add_field(name='/found [city name]', value='Found your city!', inline=False)
@@ -83,7 +86,7 @@ async def balance(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='zones', description='View the levels of your zones.')
+@tree.command(name='zones', description='View the levels of your zones')
 async def zones(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -105,7 +108,7 @@ async def zones(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='services', description='View your city services.')
+@tree.command(name='services', description='View your city services')
 async def services(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -127,7 +130,7 @@ async def services(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! use `/found` to create one!')
 
-@tree.command(name='buildings', description='View buildings you can build.')
+@tree.command(name='buildings', description='View buildings you can build')
 async def buildings(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -142,7 +145,7 @@ async def buildings(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='policies', description='View available policies for your city.')
+@tree.command(name='policies', description='View available policies for your city')
 async def policies(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -151,7 +154,7 @@ async def policies(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city! Use `/found` to create one!')
 
-@tree.command(name='upgrade', description='Upgrade a zone or service.')
+@tree.command(name='upgrade', description='Upgrade a zone or service')
 async def upgrade(intr: discord.Interaction, zone_or_service: str):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -207,7 +210,7 @@ async def upgrade(intr: discord.Interaction, zone_or_service: str):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='build', description='Build a building.')
+@tree.command(name='build', description='Build a building')
 async def build(intr: discord.Interaction, building: str):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -235,7 +238,7 @@ async def build(intr: discord.Interaction, building: str):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='add', description='Add a policy in your city.')
+@tree.command(name='add', description='Add a policy in your city')
 async def add(intr: discord.Interaction):
     city_exists = cur.execute('SELECT name FROM cities WHERE id=?', (intr.user.id, )).fetchone()
 
@@ -276,7 +279,7 @@ async def collect(intr: discord.Interaction):
     else:
         await intr.response.send_message('You haven\'t created a city yet! Use `/found` to create one!')
 
-@tree.command(name='give', description='Developer use only.')
+@tree.command(name='give', description='Give a user money, DEV ONLY', guilds=support_server)
 async def give(intr: discord.Interaction, user: discord.Member, money_amount: int, resources_amount: int):
     if intr.user.id == 768584481795342356:
         res = cur.execute('SELECT balance, resources FROM cities WHERE id=?', (user.id, )).fetchone()
@@ -307,13 +310,13 @@ async def lb(intr: discord.Interaction):
 
     await intr.response.send_message(embed=lb_embed)
 
-@tree.command(name='stats', description='View the bot\'s server and city count.')
+@tree.command(name='stats', description='View the bot\'s server and city count')
 async def stats(intr: discord.Interaction):
     city_count = cur.execute('SELECT COUNT (*) FROM cities').fetchone()
 
     await intr.response.send_message(f'UrbanBot is on {len(client.guilds)} servers and {city_count[0]} cities have been created!')
 
-@tree.command(name='modname', description='Moderator use only.')
+@tree.command(name='modname', description='Moderate a city\'s name, MOD ONLY', guilds=support_server)
 async def modname(intr: discord.Interaction, city_name: str):
     if intr.user.id == 768584481795342356:
         cur.execute('UPDATE cities SET name=? WHERE name=?', ('Moderated Name', city_name, ))
@@ -322,7 +325,7 @@ async def modname(intr: discord.Interaction, city_name: str):
     else:
         await intr.response.send_message('You must be a moderator to use this command.')
 
-@tree.command(name='setname', description='Moderator use only.')
+@tree.command(name='setname', description='Change a city\'s name, MOD ONLY', guilds=support_server)
 async def setname(intr: discord.Interaction, user: discord.Member, new_city_name: str):
     if intr.user.id == 768584481795342356:
         cur.execute('UPDATE cities SET name=? WHERE id=?', (new_city_name, user.id, ))
