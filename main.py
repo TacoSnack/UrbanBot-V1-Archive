@@ -339,4 +339,4 @@ async def on_app_command_error(intr: discord.Interaction, error: app_commands.Ap
         await intr.response.send_message('An unknown error occured. Support server: https://discord.gg/XuZNNJbf4U', ephemeral=True)
         raise error
 
-client.run('MTA0MTg0MjI2MDQzNTc5NjA0MA.GmlGFn.p0dG4kri8SEz-jfiwC97LhvK611AYGc4ZxLL3A')
+client.run('TOKEN')
